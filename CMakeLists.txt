@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
 
 set(CMAKE_CXX_STANDARD 14)
 set(POSITION_INDEPENDENT_CODE ON)
@@ -9,11 +9,6 @@ set(OUTPUT_DIR ${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${OUTPUT_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${OUTPUT_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_DIR})
-
-include_directories(
-  ${CMAKE_SOURCE_DIR}/thread/include
-  ${CMAKE_SOURCE_DIR}/demo/include
-)
 
 add_subdirectory(thread)
 add_subdirectory(demo)

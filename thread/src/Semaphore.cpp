@@ -1,6 +1,20 @@
 #include "Semaphore.h"
 
+#include <condition_variable>
+#include <memory>
+#include <mutex>
+
 namespace rossetta {
+
+/**
+ * @brief Construct a new Semaphore:: Semaphore object
+ *
+ * @param count
+ */
+Semaphore::Semaphore(int count)
+    : count_(count),
+      lock_(std::make_unique<std::mutex>()),
+      cond_(std::make_unique<std::condition_variable>()) {}
 
 int Semaphore::GetSemCount() {
   std::lock_guard<std::mutex> lg(*lock_);
@@ -20,7 +34,7 @@ void Semaphore::Wait() {
  * @brief 释放资源
  */
 void Semaphore::Release() {
-  std::unique_lock<std::mutex> lg(*lock_);
+  std::lock_guard<std::mutex> lg(*lock_);
   count_++;
   cond_->notify_one();
 }
@@ -29,11 +43,10 @@ void Semaphore::Release() {
  * @brief move constructor
  * @param other
  */
-Semaphore::Semaphore(Semaphore &&other) noexcept {
-  count_ = other.count_;
-  lock_ = std::move(other.lock_);
-  cond_ = std::move(other.cond_);
-}
+Semaphore::Semaphore(Semaphore &&other) noexcept
+    : count_(other.count_),
+      lock_(std::move(other.lock_)),
+      cond_(std::move(other.cond_)) {}
 
 /**
  * @brief move assignment
@@ -51,4 +64,4 @@ Semaphore &Semaphore::operator=(Semaphore &&other) noexcept {
   return *this;
 }
 
-} // namespace rossetta
+}  // namespace rossetta

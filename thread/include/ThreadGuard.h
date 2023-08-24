@@ -7,20 +7,18 @@ namespace rossetta {
 
 class ThreadGuard {
 public:
-  ThreadGuard() = default;
-
   template <typename Func, typename... Args>
-  ThreadGuard(Func &&func, Args &&...args) {
+  explicit ThreadGuard(Func &&func, Args &&...args) {
     t = std::thread(std::forward<Func>(func), std::forward<Args>(args)...);
   }
 
-  explicit ThreadGuard(std::thread &&_thread) { t = std::move(_thread); }
+  explicit ThreadGuard(std::thread &&_thread) : t(std::move(_thread)) {  }
 
   // move constructor
-  ThreadGuard(ThreadGuard &&other) { t = std::move(other.t); }
+  ThreadGuard(ThreadGuard &&other)  noexcept : t(std::move(other.t)) {  }
 
   // move assignment
-  ThreadGuard &operator=(ThreadGuard &&other) {
+  ThreadGuard &operator=(ThreadGuard &&other)  noexcept {
     if (this != &other) {
       t = std::move(other.t);
     }

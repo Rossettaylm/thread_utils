@@ -9,14 +9,13 @@ namespace rossetta {
 
 class Semaphore {
 public:
-  Semaphore(int count = 0) : count_(count) {
-    lock_ = std::make_unique<std::mutex>();
-    cond_ = std::make_unique<std::condition_variable>();
-  }
-  ~Semaphore() {}
+ explicit Semaphore(int count = 0);
+ ~Semaphore() = default;
 
-  Semaphore(Semaphore &&other) noexcept;            // move constructor
-  Semaphore &operator=(Semaphore &&other) noexcept; // move assign
+ Semaphore(const Semaphore& other) = delete;
+ Semaphore& operator=(const Semaphore& other) = delete;
+ Semaphore(Semaphore&& other) noexcept;             // move constructor
+ Semaphore& operator=(Semaphore&& other) noexcept;  // move assign
 
 public:
   int GetSemCount();
